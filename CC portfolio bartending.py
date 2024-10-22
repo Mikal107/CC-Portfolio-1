@@ -13,8 +13,12 @@ class Recipe:
 # Here, var will be input as an int corresponding to the variation's 
 # position in the list self.vars
     def recipe(self, var):
+        title = self.name
+        if self.vars[var] != "":
+            title += f" ({self.vars[var]})"
+        print("\n" + title + "\n" + ("=" * 32))
         for ing in self.ings[var]:
-            print(ing + " " * (20 - len(ing)) + self.ings[ing])
+            print(ing + " " * (20 - len(ing)) + self.ings[var][ing])
     def add_var(self, name, ings, original_name = ""):
         if original_name != "":
             self.vars[0] = original_name
@@ -90,3 +94,7 @@ bss_ings = {"Blood":"1.5 oz", "Sand":"1.5 oz"}
 blood_and_sand.add_var("Authentic", bss_ings)
 
 recipes = get_recipes()
+
+blood_and_sand.recipe(0)
+blood_and_sand.recipe(1)
+blood_and_sand.recipe(2)
