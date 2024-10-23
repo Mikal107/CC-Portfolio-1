@@ -109,17 +109,36 @@ def remove_ing(ing):
             outfile.write(line + "\n")
         outfile.close()
 
+def get_ings():
+    infile = open("Ingredients.txt", "r")
+    lines = infile.readlines()
+    lines = [line.strip("\n") for line in lines]
+    infile.close()
+    return lines
+
+def missing_ings():
+    my_ings = get_ings()
+    missing_ings = {}
+    for recipe in recipes:
+        for i in range(len(recipe.vars)): #for each variation of this recipe:
+            var_missing_ings = []
+            for ing in recipe.ings[i]: #for each ing in this variation:
+                if ing not in my_ings: var_missing_ings.append(ing)
+            name = recipe.name
+            if recipe.vars[i] != "": name += f" ({recipe.vars[i]})"
+            missing_ings[name] = var_missing_ings
+    return missing_ings
+
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 
 recipes = get_recipes()
 
-# for recipe in recipes:
-#     for i in range(len(recipe.vars)):
-#         recipe.recipe(i)
-
 my_ings = ["Blanco Tequila", "Bourbon", "Absolut Citron", "Cointreau",
            "Peychaud's Bitters", "Cherry Heering", "Creme de Cassis", 
            "Sweet Vermouth", "Lime Juice", "Lemon Juice", "Orange Juice",
            "Simple Syrup"]
+print(missing_ings())
+print(missing_ings().keys())
+print(missing_ings().values())
