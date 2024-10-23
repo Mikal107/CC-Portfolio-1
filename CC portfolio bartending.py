@@ -53,6 +53,19 @@ def write_recipe(recipe):
         outfile.write(line)
     outfile.close()
 
+def remove_recipe(recipe):
+    recipes.remove(recipe)
+    infile = open("Recipes.txt", "r")
+    lines = infile.readlines()
+    infile.close()
+    for line in lines:
+        if line.split(":")[0] == recipe.name:
+            lines.remove(line)
+    outfile = open("Recipes.txt", "w")
+    for line in lines:
+        outfile.write(line)
+    outfile.close()
+
 def get_recipes():
     recipes = []
     infile = open("Recipes.txt", "r")
@@ -134,11 +147,3 @@ def missing_ings():
 ##### TESTING AREA #####
 
 recipes = get_recipes()
-
-my_ings = ["Blanco Tequila", "Bourbon", "Absolut Citron", "Cointreau",
-           "Peychaud's Bitters", "Cherry Heering", "Creme de Cassis", 
-           "Sweet Vermouth", "Lime Juice", "Lemon Juice", "Orange Juice",
-           "Simple Syrup"]
-print(missing_ings())
-print(missing_ings().keys())
-print(missing_ings().values())
