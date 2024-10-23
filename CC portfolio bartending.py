@@ -80,21 +80,46 @@ def get_recipes():
         recipes.append(recipe)
     return recipes
 
-##### TESTING AREA #####
-##### TESTING AREA #####
-##### TESTING AREA #####
+def add_ing(ing):
+    infile = open("Ingredients.txt", "r")
+    lines = infile.readlines()
+    lines = [line.strip("\n") for line in lines]
+    infile.close()
+    if ing in lines:
+        print("Ingredient already on list!")
+    else:
+        lines.append(ing)
+        lines.sort()
+        outfile = open("Ingredients.txt", "w")
+        for line in lines:
+            outfile.write(line + "\n")
+        outfile.close()
 
-bs_ings = {"Scotch":"0.75 oz", "Cherry Heering":"0.75 oz",
-           "Sweet Vermouth":"0.75 oz", "Orange Juice":"0.75 oz"}
-blood_and_sand = Recipe("Blood and Sand", bs_ings)
-bsm_ings = {"Scotch":"1.5 oz", "Cherry Heering":"0.5 oz",
-           "Sweet Vermouth":"0.5 oz", "Orange Juice":"0.75 oz"}
-blood_and_sand.add_var("Meehan", bsm_ings, "Classic")
-bss_ings = {"Blood":"1.5 oz", "Sand":"1.5 oz"}
-blood_and_sand.add_var("Authentic", bss_ings)
+def remove_ing(ing):
+    infile = open("Ingredients.txt", "r")
+    lines = infile.readlines()
+    lines = [line.strip("\n") for line in lines]
+    infile.close()
+    if ing not in lines:
+        print("Ingredient not on list!")
+    else:
+        lines.remove(ing)
+        outfile = open("Ingredients.txt", "w")
+        for line in lines:
+            outfile.write(line + "\n")
+        outfile.close()
+
+##### TESTING AREA #####
+##### TESTING AREA #####
+##### TESTING AREA #####
 
 recipes = get_recipes()
 
-blood_and_sand.recipe(0)
-blood_and_sand.recipe(1)
-blood_and_sand.recipe(2)
+# for recipe in recipes:
+#     for i in range(len(recipe.vars)):
+#         recipe.recipe(i)
+
+my_ings = ["Blanco Tequila", "Bourbon", "Absolut Citron", "Cointreau",
+           "Peychaud's Bitters", "Cherry Heering", "Creme de Cassis", 
+           "Sweet Vermouth", "Lime Juice", "Lemon Juice", "Orange Juice",
+           "Simple Syrup"]
