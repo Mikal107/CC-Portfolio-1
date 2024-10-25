@@ -19,6 +19,37 @@ class Recipe:
         print("\n" + title + "\n" + ("=" * 32))
         for ing in self.ings[var]:
             print(ing + " " * (20 - len(ing)) + self.ings[var][ing])
+    def view_all_vars(self):
+        if len(self.vars) == 1: self.recipe(0)
+        else:
+            for i in range(1, len(self.vars), 2):
+                title_1 = self.name
+                if self.vars[i-1] != "":
+                    title_1 += f" ({self.vars[i-1]})"
+                title_2 = self.name
+                if self.vars[i] != "":
+                    title_2 += f" ({self.vars[i]})"
+                print("\n" + title_1 + " " * (37 - len(title_1)) + title_2)
+                print("=" * 32 + " " * 5 + "=" * 32)
+                ing_strings = []
+                for ing in self.ings[i - 1]:
+                    name = ing
+                    amount = self.ings[i - 1][ing]
+                    s = name + " " * (20 - len(name)) + amount
+                    ing_strings.append(s)
+                while len(ing_strings) < len(self.ings[i]):
+                    ing_strings.append("")
+                j = 0
+                for ing in self.ings[i]:
+                    name = ing
+                    amount = self.ings[i][ing]
+                    s = " " * (37 - len(ing_strings[j]))
+                    s += name + " " * (20 - len(name)) + amount
+                    ing_strings[j] += s
+                    j += 1
+                for s in ing_strings: print(s)
+            if len(self.vars) % 2 == 1:
+                self.recipe(len(self.vars) - 1)
     def add_var(self, name, ings, original_name = ""):
         if original_name != "":
             self.vars[0] = original_name
@@ -142,8 +173,45 @@ def missing_ings():
             missing_ings[name] = var_missing_ings
     return missing_ings
 
+recipes = get_recipes()
+
+def main(skip_intro = False):
+    if not skip_intro:
+        print("\nWelcome to the Bartender's Virtual Assistant!")
+        print("\nThis program is designed to help you track your cocktail ")
+        print("recipes, discover new ones, and track your collection of ")
+        print("cocktail ingredients. It can also show you what drinks you ")
+        print("can make using the ingredients you have, and even all the ")
+        print("drinks you could make if you had just one more ingredient!")
+    print("\nMain Menu")
+    print("1. View a recipe")
+    print("2. Edit your recipes")
+    print("3. View your ingredients")
+    print("4. Edit your ingredients")
+    print("5. View recipes you can make with your ingredients")
+    print("6. View recipes missing only a few ingredients")
+    print("7. Quit (Or enter 'quit' at any time)")
+    choice = str(input("\nChoose a menu option: ")).lower()
+    if choice == "quit" or choice == "7": return
+    elif choice == "1":
+        choice = str(input("Enter a recipe name, or type "
+                           "'all' to view all recipes: ")).lower()
+        if choice == "quit": return
+        elif choice == "all":
+            for recipe in recipes:
+                recipe.view_all_vars()
+        elif choice in [recipe.name.lower() for recipe in recipes]:
+            for recipe in recipes:
+                if choice == recipe.name.lower():
+                    recipe.view_all_vars()
+        choice = str(input("\nEnter 'quit' to quit, or 'main' to "
+                           "return to the main menu: ")).lower()
+        if choice == "quit": return
+        elif choice == "main": main(True)
+
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 
-recipes = get_recipes()
+if __name__ == "__main__":
+    main(True)
