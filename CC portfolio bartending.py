@@ -275,6 +275,20 @@ def main(skip_intro = False):
                             recipe.ings.pop(bad_index)
                             write_recipe(recipe)
                             print(f"{bad_var.title()} variation removed.")
+    elif choice == "3":
+        print("\nYour Ingredients\n" + "=" * 32)
+        for ing in get_ings():
+            print(ing)
+    elif choice == "4":
+        ing = str(input("Enter an ingredient name: "))
+        if ing in get_ings():
+            choice = str(input(f"{ing} is on your list! Remove it? (y/n) "))
+            if choice.lower()[0] == "y":
+                remove_ing(ing)
+        else:
+            choice = str(input(f"{ing} is not on your list! Add it? (y/n) "))
+            if choice.lower()[0] == "y":
+                add_ing(ing)
 
 ##### TESTING AREA #####
 ##### TESTING AREA #####
