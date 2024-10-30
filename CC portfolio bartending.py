@@ -85,7 +85,6 @@ def write_recipe(recipe):
     outfile.close()
 
 def remove_recipe(recipe):
-    recipes.remove(recipe)
     infile = open("Recipes.txt", "r")
     lines = infile.readlines()
     infile.close()
@@ -163,7 +162,7 @@ def get_ings():
 def missing_ings():
     my_ings = get_ings()
     missing_ings = {}
-    for recipe in recipes:
+    for recipe in get_recipes:
         for i in range(len(recipe.vars)): #for each variation of this recipe:
             var_missing_ings = []
             for ing in recipe.ings[i]: #for each ing in this variation:
@@ -173,10 +172,7 @@ def missing_ings():
             missing_ings[name] = var_missing_ings
     return missing_ings
 
-recipes = get_recipes()
-
 def main(skip_intro = False):
-    recipes = get_recipes()
     if not skip_intro:
         print("\nWelcome to the Bartender's Virtual Assistant!")
         print("\nThis program is designed to help you track your cocktail ")
@@ -199,12 +195,16 @@ def main(skip_intro = False):
                            "'all' to view all recipes: ")).lower()
         if choice == "quit": return
         elif choice == "all":
-            for recipe in recipes:
+            for recipe in get_recipes():
                 recipe.view_all_vars()
-        elif choice in [recipe.name.lower() for recipe in recipes]:
-            for recipe in recipes:
+        else:
+            recipe_found = False
+            for recipe in get_recipes():
                 if choice == recipe.name.lower():
                     recipe.view_all_vars()
+                    recipe_found = True
+            if not recipe_found:
+                print("Recipe not found!")
         choice = str(input("\nEnter 'quit' to quit, or 'main' to "
                            "return to the main menu: ")).lower()
         if choice == "quit": return
@@ -224,18 +224,17 @@ def main(skip_intro = False):
                 ings.append(str(input(f"Enter ingredient {i+1} name: ")))
                 amounts.append(str(input(f"Enter ingredient {i+1} amount: ")))
             ings = {ings[i]:amounts[i] for i in range(n)}
-            recipes.append(Recipe(name, ings))
+            new_recipe = Recipe(name, ings)
             print("\nRecipe saved!")
-            recipes[-1].recipe(0)
+            new_recipe.recipe(0)
         elif choice == "2":
             name = str(input("\nChoose a cocktail to modify: ")).lower()
-            if name in [recipe.name.lower() for recipe in recipes]:
-                for recipe in recipes:
-                    if recipe.name.lower() == name:
-                        r = recipe
-            else:
-                print("Recipe not found!")
-                return
+            r = ""
+            for recipe in get_recipes():
+                if recipe.name.lower() == name:
+                    r = recipe
+            if r == "":
+                print("Recipe not found!"); return
             var_name = str(input("Enter a name for this variation: "))
             n = int(input("Enter number of ingredients: "))
             ings, amounts = [], []
@@ -248,17 +247,14 @@ def main(skip_intro = False):
                                       "original recipe: "))
             else: orig_name = ""
             r.add_var(var_name, ings, orig_name)
-            recipes = get_recipes()
             print("\nRecipe saved!")
-            for recipe in recipes:
-                if recipe.name.lower() == name:
-                    recipe.recipe(-1)
+            r.recipe(-1)
         elif choice == "3":
             name = str(input("\nChoose a cocktail to remove: ")).lower()
             conf = str(input(f"Are you sure you want to remove all variations"
                              f" of the {name} from your recipe book? (y/n) "))
             if conf.lower()[0] == "y":
-                for recipe in recipes:
+                for recipe in get_recipes():
                     if recipe.name.lower() == name:
                         remove_recipe(recipe)
                         print(f"{name} recipe removed.")
@@ -266,7 +262,7 @@ def main(skip_intro = False):
             name = str(input("\nChoose a cocktail to "
                              "remove a variation: ")).lower()
             bad_var = str(input("Enter a variation name to remove: ")).lower()
-            for recipe in recipes:
+            for recipe in get_recipes():
                 if recipe.name.lower() == name:
                     for var in recipe.vars:
                         if var.lower() == bad_var:
@@ -275,6 +271,9 @@ def main(skip_intro = False):
                             recipe.ings.pop(bad_index)
                             write_recipe(recipe)
                             print(f"{bad_var.title()} variation removed.")
+                        if len(recipe.vars) == 1:
+                            recipe.vars[0] = ""
+                            write_recipe(recipe)
     elif choice == "3":
         print("\nYour Ingredients\n" + "=" * 32)
         for ing in get_ings():
