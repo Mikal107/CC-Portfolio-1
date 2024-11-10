@@ -1,7 +1,0 @@
-Blood and Sand:Classic;Scotch,Cherry Heering,Sweet Vermouth,Orange Juice;0.75 oz,0.75 oz,0.75 oz,0.75 oz:Meehan;Scotch,Cherry Heering,Sweet Vermouth,Orange Juice;1.5 oz,0.5 oz,0.5 oz,0.75 oz
-Cosmopolitan:;Absolut Citron,Cointreau,Lime Juice,Cranberry Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz,0.5 oz,0.25 oz
-Daiquiri:;White Rum,Lime Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz
-El Diablo:Blanco;Blanco Tequila,Creme de Cassis,Lime Juice,Ginger Beer;1.5 oz,0.5 oz,0.5 oz,4 oz:Reposado;Reposado Tequila,Creme de Cassis,Lime Juice,Ginger Beer;1.5 oz,0.5 oz,0.5 oz,4 oz
-Last Word:;Gin,Maraschino Liqueur,Green Chartreuse,Lime Juice;0.75 oz,0.75 oz,0.75 oz,0.75 oz
-Margarita:;Blanco Tequila,Cointreau,Lime Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz,0.25 oz
-Old-Fashioned:;Bourbon,Sugar Cube,Angostura Bitters;2 oz,1,2 dashes

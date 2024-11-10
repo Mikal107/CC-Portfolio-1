@@ -1,0 +1,14 @@
+Americano:;Campari,Sweet Vermouth,Seltzer;1 oz,1 oz,4 oz
+Aviation:;Gin,Lemon Juice,Maraschino Liqueur,Creme de Violette;2 oz,0.5 oz,0.25 oz,0.25 oz
+Blood and Sand:Classic;Scotch,Cherry Heering,Sweet Vermouth,Orange Juice;0.75 oz,0.75 oz,0.75 oz,0.75 oz:Meehan;Scotch,Cherry Heering,Sweet Vermouth,Orange Juice;1.5 oz,0.5 oz,0.5 oz,0.75 oz
+Cosmopolitan:;Lemon Vodka,Cointreau,Lime Juice,Cranberry Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz,0.5 oz,0.25 oz
+Daiquiri:;White Rum,Lime Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz
+Gin and Tonic:;Gin,Tonic Water;2 oz,4 oz
+Last Word:;Gin,Maraschino Liqueur,Green Chartreuse,Lime Juice;0.75 oz,0.75 oz,0.75 oz,0.75 oz
+Manhattan:;Rye Whiskey,Sweet Vermouth,Angostura Bitters;2 oz,1 oz,2 dashes
+Margarita:;Blanco Tequila,Cointreau,Lime Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz,0.25 oz
+Martini:Classic;Gin,Dry Vermouth;2.25 oz,0.75 oz:Dirty;Gin,Dry Vermouth,Olive Brine;2.25 oz,0.25 oz,0.5 oz
+Negroni:;Gin,Campari,Sweet Vermouth;1 oz,1 oz,1 oz
+Old-Fashioned:Classic;Bourbon,Sugar Cube,Angostura Bitters;2 oz,1,2 dashes:Modern;Bourbon,Dense Simple Syrup,Angostura Bitters;2 oz,0.25 oz,2 dashes
+Sidecar:;Cognac,Cointreau,Lemon Juice;1.5 oz,1 oz,0.75 oz
+Whiskey Sour:;Bourbon,Lemon Juice,Simple Syrup;2 oz,0.75 oz,0.75 oz
