@@ -187,35 +187,30 @@ def main(skip_intro = False):
     print("4. Edit your ingredients")
     print("5. View recipes you can make with your ingredients")
     print("6. View recipes missing only a few ingredients")
-    print("7. Quit (Or enter 'quit' at any time)")
-    choice = str(input("\nChoose a menu option: ")).lower()
-    if choice == "quit" or choice == "7": return
-    elif choice == "1":
+    print("7. View recipes containing a desired ingredient")
+    print("8. Quit (Or enter 'quit' at any time)")
+    choice = str(input("\nChoose a menu option: "))
+    if choice == "1":
         choice = str(input("Enter a recipe name, or type "
-                           "'all' to view all recipes: ")).lower()
-        if choice == "quit": return
-        elif choice == "all":
+                           "'all' to view all recipes: "))
+        if choice == "all":
             for recipe in get_recipes():
                 recipe.view_all_vars()
         else:
             recipe_found = False
             for recipe in get_recipes():
-                if choice == recipe.name.lower():
+                if choice == recipe.name:
                     recipe.view_all_vars()
                     recipe_found = True
             if not recipe_found:
                 print("Recipe not found!")
-        choice = str(input("\nEnter 'quit' to quit, or 'main' to "
-                           "return to the main menu: ")).lower()
-        if choice == "quit": return
-        elif choice == "main": main(True)
     elif choice == "2":
         print("\nEdit a Recipe")
         print("1. Add a new recipe")
         print("2. Add a variation to an existing recipe")
         print("3. Remove a recipe")
         print("4. Remove a variation from an existing recipe")
-        choice = str(input("\nChoose a menu option: ")).lower()
+        choice = str(input("\nChoose a menu option: "))
         if choice == "1":
             name = str(input("\nEnter cocktail name: "))
             n = int(input("Enter number of ingredients: "))
@@ -228,10 +223,10 @@ def main(skip_intro = False):
             print("\nRecipe saved!")
             new_recipe.recipe(0)
         elif choice == "2":
-            name = str(input("\nChoose a cocktail to modify: ")).lower()
+            name = str(input("\nChoose a cocktail to modify: "))
             r = ""
             for recipe in get_recipes():
-                if recipe.name.lower() == name:
+                if recipe.name == name:
                     r = recipe
             if r == "":
                 print("Recipe not found!"); return
@@ -250,22 +245,22 @@ def main(skip_intro = False):
             print("\nRecipe saved!")
             r.recipe(-1)
         elif choice == "3":
-            name = str(input("\nChoose a cocktail to remove: ")).lower()
+            name = str(input("\nChoose a cocktail to remove: "))
             conf = str(input(f"Are you sure you want to remove all variations"
                              f" of the {name} from your recipe book? (y/n) "))
             if conf.lower()[0] == "y":
                 for recipe in get_recipes():
-                    if recipe.name.lower() == name:
+                    if recipe.name == name:
                         remove_recipe(recipe)
                         print(f"{name} recipe removed.")
         elif choice == "4":
             name = str(input("\nChoose a cocktail to "
-                             "remove a variation: ")).lower()
-            bad_var = str(input("Enter a variation name to remove: ")).lower()
+                             "remove a variation: "))
+            bad_var = str(input("Enter a variation name to remove: "))
             for recipe in get_recipes():
-                if recipe.name.lower() == name:
+                if recipe.name == name:
                     for var in recipe.vars:
-                        if var.lower() == bad_var:
+                        if var == bad_var:
                             bad_index = recipe.vars.index(var)
                             recipe.vars.pop(bad_index)
                             recipe.ings.pop(bad_index)
@@ -302,10 +297,21 @@ def main(skip_intro = False):
                     s += ing
                     if not ing == missing[key][-1]: s += ", "
                 print(s)
+    elif choice == "7":
+        desired = str(input("Enter an ingredient to find recipes: "))
+        names = []
+        for recipe in get_recipes():
+            for i in range(len(recipe.vars)):
+                if desired in recipe.ings[i]:
+                    s = recipe.name
+                    if len(recipe.vars) > 1:
+                        s += f" ({recipe.vars[i]})"
+                    names.append(s)
+        for name in names: print(name)
 
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 
 if __name__ == "__main__":
-    main(True)
+    main(False)
