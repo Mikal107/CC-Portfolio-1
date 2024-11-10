@@ -162,7 +162,7 @@ def get_ings():
 def missing_ings():
     my_ings = get_ings()
     missing_ings = {}
-    for recipe in get_recipes:
+    for recipe in get_recipes():
         for i in range(len(recipe.vars)): #for each variation of this recipe:
             var_missing_ings = []
             for ing in recipe.ings[i]: #for each ing in this variation:
@@ -288,6 +288,20 @@ def main(skip_intro = False):
             choice = str(input(f"{ing} is not on your list! Add it? (y/n) "))
             if choice.lower()[0] == "y":
                 add_ing(ing)
+    elif choice == "5":
+        missing = missing_ings()
+        for key in missing.keys():
+            if missing[key] == []: print(key)
+    elif choice == "6":
+        n = int(input("Enter your desired number of missing ingredients: "))
+        missing = missing_ings()
+        for key in missing.keys():
+            if len(missing[key]) == n: 
+                s = f"{key}: "
+                for ing in missing[key]:
+                    s += ing
+                    if not ing == missing[key][-1]: s += ", "
+                print(s)
 
 ##### TESTING AREA #####
 ##### TESTING AREA #####
