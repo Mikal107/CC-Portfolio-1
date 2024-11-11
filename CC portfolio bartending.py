@@ -172,6 +172,66 @@ def missing_ings():
             missing_ings[name] = var_missing_ings
     return missing_ings
 
+def generate_tags(ings):
+    volume = 0
+    for val in ings.values():
+        if val[-2:] == "oz":
+            volume += float(val.split()[0])
+    tags = []
+    gins = ["Gin", "London Dry Gin", "Old Tom Gin", "Plymouth Gin"]
+    tequilas = ["Blanco Tequila", "Reposado Tequila", "Anejo Tequila"]
+    rums = ["White Rum", "Gold Rum", "Dark Rum"]
+    vodkas = ["Vodka", "Lemon Vodka"]
+    whiskies = ["Bourbon", "Rye Whiskey", "Scotch"]
+    brandies = ["Brandy", "Cognac", "Pisco", "Apple Brandy"]
+    base_spirits = gins + tequilas + rums + vodkas + whiskies + brandies
+
+    for item in gins:
+        if item in ings: tags.append("Gin"); break
+    for item in tequilas:
+        if item in ings: tags.append("Tequila"); break
+    for item in rums:
+        if item in ings: tags.append("Rum"); break
+    for item in vodkas:
+        if item in ings: tags.append("Vodka"); break
+    for item in whiskies:
+        if item in ings: tags.append("Whiskey"); break
+    for item in brandies:
+        if item in ings: tags.append("Brandy"); break
+    
+    sugar_values = {"Simple Syrup": 1, "Dense Simple Syrup": 2,
+                   "Ginger Beer": 0.85, "Creme de Cassis": 0.75,
+                   "White Rum": 0.5, "Gold Rum": 0.5,
+                   "Dark Rum": 0.5, "Sweet Vermouth": 0.5,
+                   "Maraschino Liqueur": 0.5, "Cherry Heering": 0.4,
+                   "Amaretto": 0.8, "Orange Juice": 0.9,
+                   "Cointreau": 0.3, "Apple Brandy": 0.5}
+    sugar_index = 0
+    for ing in ings:
+        if ing in sugar_values:
+            sugar_index += sugar_values[ing] * float(ings[ing].split()[0])
+    if sugar_index >= 0.5 * volume: tags.append("Sweet")
+    
+    boozy_ings = base_spirits + ["Cointreau"]
+    booze_index = 0
+    for ing in ings:
+        if ing in boozy_ings:
+            booze_index += float(ings[ing].split()[0])
+    if booze_index >= 0.65 * volume: tags.append("Boozy")
+
+    sour_ings = ["Lemon Juice", "Lime Juice"]
+    sour_index = 0
+    for ing in ings:
+        if ing in sour_ings:
+            sour_index += float(ings[ing].split()[0])
+    if sour_index >= 0.2 * volume: tags.append("Sour")
+
+    fizzy_ings = ["Ginger Beer", "Seltzer", "Tonic Water", "Sparkling Wine"]
+    for ing in ings:
+        if ing in fizzy_ings: tags.append("Fizzy"); break
+
+    return tags
+
 def main(skip_intro = False):
     if not skip_intro:
         print("\nWelcome to the Bartender's Virtual Assistant!")
@@ -315,3 +375,8 @@ def main(skip_intro = False):
 
 if __name__ == "__main__":
     main(False)
+
+print()
+for recipe in get_recipes():
+    for i in range(len(recipe.vars)):
+        print(f"{recipe.name} ({recipe.vars[i]}): {generate_tags(recipe.ings[i])}")
