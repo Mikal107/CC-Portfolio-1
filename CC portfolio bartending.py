@@ -2,11 +2,13 @@
 # self.vars is a list of variation names
 # self.ings is a list of dictionaries, each corresponding to the ingredients
 #   of a particular variation
+# self.tags is a list of lists of tags, one list for each variation
 class Recipe:
     def __init__(self, name, ings):
         self.name = name
         self.vars = [""]
         self.ings = [ings]
+        self.tags = [generate_tags(ings)]
         write_recipe(self)
     def __repr__(self):
         return self.name
@@ -55,6 +57,7 @@ class Recipe:
             self.vars[0] = original_name
         self.vars.append(name)
         self.ings.append(ings)
+        self.tags.append(generate_tags(ings))
         write_recipe(self)
 
 def write_recipe(recipe):
@@ -182,7 +185,8 @@ def generate_tags(ings):
     tequilas = ["Blanco Tequila", "Reposado Tequila", "Anejo Tequila"]
     rums = ["White Rum", "Gold Rum", "Dark Rum"]
     vodkas = ["Vodka", "Lemon Vodka"]
-    whiskies = ["Bourbon", "Rye Whiskey", "Scotch"]
+    whiskies = ["Bourbon", "Rye Whiskey", "Single Malt Scotch",
+                "Blended Scotch"]
     brandies = ["Brandy", "Cognac", "Pisco", "Apple Brandy"]
     base_spirits = gins + tequilas + rums + vodkas + whiskies + brandies
 
@@ -199,13 +203,15 @@ def generate_tags(ings):
     for item in brandies:
         if item in ings: tags.append("Brandy"); break
     
-    sugar_values = {"Simple Syrup": 1, "Dense Simple Syrup": 2,
+    sugar_values = {"Simple Syrup": 1, "Rich Simple Syrup": 2,
+                   "Semi-Rich Simple": 1.5, "Bourbon": 0.2,
                    "Ginger Beer": 0.85, "Creme de Cassis": 0.75,
                    "White Rum": 0.5, "Gold Rum": 0.5,
                    "Dark Rum": 0.5, "Sweet Vermouth": 0.5,
                    "Maraschino Liqueur": 0.5, "Cherry Heering": 0.4,
                    "Amaretto": 0.8, "Orange Juice": 0.9,
-                   "Cointreau": 0.3, "Apple Brandy": 0.5}
+                   "Cointreau": 0.3, "Apple Brandy": 0.5,
+                   "Grand Marnier": 0.5}
     sugar_index = 0
     for ing in ings:
         if ing in sugar_values:
@@ -248,7 +254,8 @@ def main(skip_intro = False):
     print("5. View recipes you can make with your ingredients")
     print("6. View recipes missing only a few ingredients")
     print("7. View recipes containing a desired ingredient")
-    print("8. Quit (Or enter 'quit' at any time)")
+    print("8. Search recipes by tags")
+    print("9. Quit (Or enter 'quit' at any time)")
     choice = str(input("\nChoose a menu option: "))
     if choice == "1":
         choice = str(input("Enter a recipe name, or type "
@@ -368,15 +375,27 @@ def main(skip_intro = False):
                         s += f" ({recipe.vars[i]})"
                     names.append(s)
         for name in names: print(name)
+    elif choice == "8":
+        choice = str(input("Enter a tag to search for, or enter 'options' for "
+                           "a list of possible tags: "))
+        if choice == "options":
+            print("Gin, Tequila, Rum, Vodka, Whiskey, Brandy, "
+                  "Sweet, Sour, Boozy, Fizzy")
+            choice = str(input("Enter a tag to search for: "))
+        good_recipes = []
+        for recipe in get_recipes():
+            for i in range(len(recipe.vars)):
+                if choice in recipe.tags[i]:
+                    name = recipe.name
+                    if len(recipe.vars) > 1:
+                        name += f" ({recipe.vars[i]})"
+                    good_recipes.append(name)
+        for name in good_recipes: print(name)
 
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 ##### TESTING AREA #####
 
 if __name__ == "__main__":
-    main(False)
+    main(True)
 
-print()
-for recipe in get_recipes():
-    for i in range(len(recipe.vars)):
-        print(f"{recipe.name} ({recipe.vars[i]}): {generate_tags(recipe.ings[i])}")
