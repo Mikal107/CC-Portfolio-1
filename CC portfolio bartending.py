@@ -1,8 +1,3 @@
-# ings must be input as a dictionary, not writing code to check
-# self.vars is a list of variation names
-# self.ings is a list of dictionaries, each corresponding to the ingredients
-#   of a particular variation
-# self.tags is a list of lists of tags, one list for each variation
 class Recipe:
     def __init__(self, name, ings):
         self.name = name
@@ -12,8 +7,6 @@ class Recipe:
         write_recipe(self)
     def __repr__(self):
         return self.name
-# Here, var will be input as an int corresponding to the variation's 
-# position in the list self.vars
     def recipe(self, var):
         title = self.name
         if self.vars[var] != "":
@@ -166,9 +159,9 @@ def missing_ings():
     my_ings = get_ings()
     missing_ings = {}
     for recipe in get_recipes():
-        for i in range(len(recipe.vars)): #for each variation of this recipe:
+        for i in range(len(recipe.vars)):
             var_missing_ings = []
-            for ing in recipe.ings[i]: #for each ing in this variation:
+            for ing in recipe.ings[i]:
                 if ing not in my_ings: var_missing_ings.append(ing)
             name = recipe.name
             if recipe.vars[i] != "": name += f" ({recipe.vars[i]})"
@@ -255,107 +248,128 @@ def main(skip_intro = False):
     print("6. View recipes missing only a few ingredients")
     print("7. View recipes containing a desired ingredient")
     print("8. Search recipes by tags")
-    print("9. Quit (Or enter 'quit' at any time)")
+    print("9. Quit")
     choice = str(input("\nChoose a menu option: "))
     if choice == "1":
-        choice = str(input("Enter a recipe name, or type "
-                           "'all' to view all recipes: "))
-        if choice == "all":
-            for recipe in get_recipes():
-                recipe.view_all_vars()
-        else:
-            recipe_found = False
-            for recipe in get_recipes():
-                if choice == recipe.name:
+        while True:
+            choice = str(input("Enter a recipe name, or type "
+                               "'all' to view all recipes: "))
+            if choice == "all":
+                for recipe in get_recipes():
                     recipe.view_all_vars()
-                    recipe_found = True
-            if not recipe_found:
-                print("Recipe not found!")
+            else:
+                recipe_found = False
+                for recipe in get_recipes():
+                    if choice == recipe.name:
+                        recipe.view_all_vars()
+                        recipe_found = True
+                if not recipe_found:
+                    print("Recipe not found!")
+            choice = str(input("\nView another recipe? (y/n): "))
+            if choice[:1].lower() != "y": break
     elif choice == "2":
-        print("\nEdit a Recipe")
-        print("1. Add a new recipe")
-        print("2. Add a variation to an existing recipe")
-        print("3. Remove a recipe")
-        print("4. Remove a variation from an existing recipe")
-        choice = str(input("\nChoose a menu option: "))
-        if choice == "1":
-            name = str(input("\nEnter cocktail name: "))
-            n = int(input("Enter number of ingredients: "))
-            ings, amounts = [], []
-            for i in range(n):
-                ings.append(str(input(f"Enter ingredient {i+1} name: ")))
-                amounts.append(str(input(f"Enter ingredient {i+1} amount: ")))
-            ings = {ings[i]:amounts[i] for i in range(n)}
-            new_recipe = Recipe(name, ings)
-            print("\nRecipe saved!")
-            new_recipe.recipe(0)
-        elif choice == "2":
-            name = str(input("\nChoose a cocktail to modify: "))
-            r = ""
-            for recipe in get_recipes():
-                if recipe.name == name:
-                    r = recipe
-            if r == "":
-                print("Recipe not found!"); return
-            var_name = str(input("Enter a name for this variation: "))
-            n = int(input("Enter number of ingredients: "))
-            ings, amounts = [], []
-            for i in range(n):
-                ings.append(str(input(f"Enter ingredient {i+1} name: ")))
-                amounts.append(str(input(f"Enter ingredient {i+1} amount: ")))
-            ings = {ings[i]:amounts[i] for i in range(n)}
-            if len(r.vars) == 1:
-                orig_name = str(input("Enter a new name for the "
-                                      "original recipe: "))
-            else: orig_name = ""
-            r.add_var(var_name, ings, orig_name)
-            print("\nRecipe saved!")
-            r.recipe(-1)
-        elif choice == "3":
-            name = str(input("\nChoose a cocktail to remove: "))
-            conf = str(input(f"Are you sure you want to remove all variations"
-                             f" of the {name} from your recipe book? (y/n) "))
-            if conf.lower()[0] == "y":
+        while True:
+            print("\nEdit a Recipe")
+            print("1. Add a new recipe")
+            print("2. Add a variation to an existing recipe")
+            print("3. Remove a recipe")
+            print("4. Remove a variation from an existing recipe")
+            choice = str(input("\nChoose a menu option: "))
+            if choice == "1":
+                name = str(input("Enter cocktail name: "))
+                n = int(input("Enter number of ingredients: "))
+                ings, amounts = [], []
+                for i in range(n):
+                    ings.append(str(input(f"Enter ingredient {i+1} name: ")))
+                    amounts.append(str(input(f"Enter ingredient {i+1} "
+                                              "amount: ")))
+                ings = {ings[i]:amounts[i] for i in range(n)}
+                new_recipe = Recipe(name, ings)
+                print("\nRecipe saved!")
+                new_recipe.recipe(0)
+            elif choice == "2":
+                name = str(input("Choose a cocktail to modify: "))
+                r = ""
                 for recipe in get_recipes():
                     if recipe.name == name:
-                        remove_recipe(recipe)
-                        print(f"{name} recipe removed.")
-        elif choice == "4":
-            name = str(input("\nChoose a cocktail to "
-                             "remove a variation: "))
-            bad_var = str(input("Enter a variation name to remove: "))
-            for recipe in get_recipes():
-                if recipe.name == name:
-                    for var in recipe.vars:
-                        if var == bad_var:
-                            bad_index = recipe.vars.index(var)
-                            recipe.vars.pop(bad_index)
-                            recipe.ings.pop(bad_index)
-                            write_recipe(recipe)
-                            print(f"{bad_var.title()} variation removed.")
-                        if len(recipe.vars) == 1:
-                            recipe.vars[0] = ""
-                            write_recipe(recipe)
+                        r = recipe
+                if r == "":
+                    print("Recipe not found!"); return
+                var_name = str(input("Enter a name for this variation: "))
+                n = int(input("Enter number of ingredients: "))
+                ings, amounts = [], []
+                for i in range(n):
+                    ings.append(str(input(f"Enter ingredient {i+1} name: ")))
+                    amounts.append(str(input(f"Enter ingredient {i+1} "
+                                             f"amount: ")))
+                ings = {ings[i]:amounts[i] for i in range(n)}
+                if len(r.vars) == 1:
+                    orig_name = str(input("Enter a new name for the "
+                                          "original recipe: "))
+                else: orig_name = ""
+                r.add_var(var_name, ings, orig_name)
+                print("\nRecipe saved!")
+                r.recipe(-1)
+            elif choice == "3":
+                name = str(input("Choose a cocktail to remove: "))
+                conf = str(input(f"Are you sure you want to remove "
+                                 f"all variations of the {name} from "
+                                 f"your recipe book? (y/n): "))
+                if conf.lower()[0] == "y":
+                    for recipe in get_recipes():
+                        if recipe.name == name:
+                            remove_recipe(recipe)
+                            print(f"{name} recipe removed.")
+            elif choice == "4":
+                name = str(input("Choose a cocktail to "
+                                 "remove a variation: "))
+                bad_var = str(input("Enter a variation name to remove: "))
+                for recipe in get_recipes():
+                    if recipe.name == name:
+                        for var in recipe.vars:
+                            if var == bad_var:
+                                bad_index = recipe.vars.index(var)
+                                recipe.vars.pop(bad_index)
+                                recipe.ings.pop(bad_index)
+                                write_recipe(recipe)
+                                print(f"{bad_var.title()} variation removed.")
+                            if len(recipe.vars) == 1:
+                                recipe.vars[0] = ""
+                                write_recipe(recipe)
+            choice = str(input("\nEdit another recipe? (y/n): "))
+            if choice[:1].lower() != "y": break
     elif choice == "3":
         print("\nYour Ingredients\n" + "=" * 32)
         for ing in get_ings():
             print(ing)
+        print()
     elif choice == "4":
-        ing = str(input("Enter an ingredient name: "))
-        if ing in get_ings():
-            choice = str(input(f"{ing} is on your list! Remove it? (y/n) "))
-            if choice.lower()[0] == "y":
-                remove_ing(ing)
-        else:
-            choice = str(input(f"{ing} is not on your list! Add it? (y/n) "))
-            if choice.lower()[0] == "y":
-                add_ing(ing)
+        while True:
+            ing = str(input("Enter an ingredient name: "))
+            if ing in get_ings():
+                choice = str(input(f"{ing} is on your list! "
+                                   f"Remove it? (y/n) "))
+                if choice.lower()[0] == "y":
+                    remove_ing(ing)
+                    print(f"{ing} removed from list.")
+            else:
+                choice = str(input(f"{ing} is not on your list! "
+                                   f"Add it? (y/n) "))
+                if choice.lower()[0] == "y":
+                    add_ing(ing)
+                    print(f"{ing} added to list.")
+            choice = str(input("\nEdit another ingredient? (y/n): "))
+            if choice[:1].lower() != "y": break
     elif choice == "5":
+        print("You can make the following cocktails:\n")
         missing = missing_ings()
         for key in missing.keys():
             if missing[key] == []: print(key)
+        print()
     elif choice == "6":
         n = int(input("Enter your desired number of missing ingredients: "))
+        print("Here's a list of cocktails with "
+              "their missing ingredient(s):\n")
         missing = missing_ings()
         for key in missing.keys():
             if len(missing[key]) == n: 
@@ -364,38 +378,47 @@ def main(skip_intro = False):
                     s += ing
                     if not ing == missing[key][-1]: s += ", "
                 print(s)
+        print()
     elif choice == "7":
-        desired = str(input("Enter an ingredient to find recipes: "))
-        names = []
-        for recipe in get_recipes():
-            for i in range(len(recipe.vars)):
-                if desired in recipe.ings[i]:
-                    s = recipe.name
-                    if len(recipe.vars) > 1:
-                        s += f" ({recipe.vars[i]})"
-                    names.append(s)
-        for name in names: print(name)
+        while True:
+            desired = str(input("Enter an ingredient to find recipes: "))
+            print()
+            names = []
+            for recipe in get_recipes():
+                for i in range(len(recipe.vars)):
+                    if desired in recipe.ings[i]:
+                        s = recipe.name
+                        if len(recipe.vars) > 1:
+                            s += f" ({recipe.vars[i]})"
+                        names.append(s)
+            for name in names: print(name)
+            if len(names) == 0: print("No recipes found!")
+            choice = str(input("\nSearch for another ingredient? (y/n): "))
+            if choice[:1].lower() != "y": break
     elif choice == "8":
-        choice = str(input("Enter a tag to search for, or enter 'options' for "
-                           "a list of possible tags: "))
-        if choice == "options":
-            print("Gin, Tequila, Rum, Vodka, Whiskey, Brandy, "
-                  "Sweet, Sour, Boozy, Fizzy")
-            choice = str(input("Enter a tag to search for: "))
-        good_recipes = []
-        for recipe in get_recipes():
-            for i in range(len(recipe.vars)):
-                if choice in recipe.tags[i]:
-                    name = recipe.name
-                    if len(recipe.vars) > 1:
-                        name += f" ({recipe.vars[i]})"
-                    good_recipes.append(name)
-        for name in good_recipes: print(name)
-
-##### TESTING AREA #####
-##### TESTING AREA #####
-##### TESTING AREA #####
+        while True:
+            choice = str(input("Enter a tag to search for, or enter "
+                            "'options' for a list of possible tags: "))
+            if choice == "options":
+                print("Gin, Tequila, Rum, Vodka, Whiskey, Brandy, "
+                    "Sweet, Sour, Boozy, Fizzy")
+                choice = str(input("Enter a tag to search for: "))
+            print()
+            good_recipes = []
+            for recipe in get_recipes():
+                for i in range(len(recipe.vars)):
+                    if choice in recipe.tags[i]:
+                        name = recipe.name
+                        if len(recipe.vars) > 1:
+                            name += f" ({recipe.vars[i]})"
+                        good_recipes.append(name)
+            for name in good_recipes: print(name)
+            if len(good_recipes) == 0: print("No recipes found!")
+            choice = str(input("\nSearch for another tag? (y/n): "))
+            if choice[:1].lower() != "y": break
+    elif choice == "9": return
+    choice = str(input("Return to main menu? (y/n): "))
+    if choice[:1].lower() == "y": main(True)
 
 if __name__ == "__main__":
-    main(True)
-
+    main(False)
